@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script src="node_modules\mathjs\dist\math.js" type="text/javascript"></script>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<style>
@@ -29,7 +30,7 @@
 			<div class="col-md-6 mx-auto" >
 				<h1 class = "display-6 text-center mb-3 text-dark">Multiple Input Equation Solver</h1>
 
-						<input id ="equationInput" class="form-control form-control-lg mb-3" placeholder="Enter Equation... (not functional yet)">
+						<input id ="equationInput" class="form-control form-control-lg mb-3" placeholder="Enter Equation... (beta testing)">
 
 				<form class = "form">
 					<div class="form-group">
@@ -74,6 +75,7 @@
 
 
 	<script>
+		console.log(math.sqrt(-4));
 		let addInputButton = document.getElementById('addInput'); 
 		let solveButton = document.getElementById('solve')
 		let resetButton = document.getElementById('reset'); 
@@ -130,23 +132,13 @@
 			var equation = document.getElementById('equationInput').value; 
 			var numOfPara = 0; 
 			// Checks the number of Paranetthis in the thing
-			for(var i = 0; i < equation.length; i++){
-				if (equation.charAt(i) == ')') {
-    				numOfPara++; 
-    			}	
-			}
-
-			var pointer = 0; 
-			while(numOfPara > 0){
-				if (equation.charAt(pointer) == '(') {
-    				numOfPara--; 
-    			}
-    			pointer++; 
-			}
+			
 
 			for(var i = 0; i < numbers.length; i++){
-
-				let answer = numbers[i]*10; 
+				let scope = {
+  					x: numbers[i]
+				}
+				let answer = math.eval(equation, scope); 
 				var newRow = document.createElement("tr");
 				newRow.classList.add("newRow");
 
