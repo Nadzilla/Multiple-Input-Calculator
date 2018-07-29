@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<style>
+		body{
+			background-image: url("images/mountains1.jpeg");
+			margin-top: 70px; 
+			background-repeat: no-repeat;
+    		background-attachment: fixed;
+    		background-position: center; 
+			color: #fff;
+		}
+		button{
+			margin-left: 10px; 
+		}
+		form {
+			margin-bottom: 10px; 
+		}
+		
+	</style>
+	<title>Multiple Input Equation Solver</title>
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 mx-auto" >
+				<h1 class = "display-6 text-center mb-3 text-dark">Multiple Input Equation Solver</h1>
+
+						<input id ="equationInput" class="form-control form-control-lg mb-3" placeholder="Enter Equation... (not functional yet)">
+
+				<form class = "form">
+					<div class="form-group">
+						<input id ="numberInput" type="number" class="form-control form-control-lg" placeholder="Enter Inputs...">
+						
+					</div>
+				</form>
+				<div class = "text-center">
+					<button class = "btn btn-primary mx-auto" id="addInput" type="button">Add Input</button>
+					<button class = "btn btn-success ml-3 mx-auto" id="solve" type="button">Solve</button>
+					<button class = "btn btn-danger ml-3 mx-auto" id="reset" type="button">Reset/Clear</button>
+				</div>
+
+					
+
+				<div id = "output">
+					<div class="card bg-primary mb-3 mt-3">
+						<div class="card-body" id = "numbers">
+							<h4 class = "text-center">Numbers: </h4>
+						</div>
+					</div>
+					<div class="card bg-success mb-3 mt-3">
+						<div class="card-body" id = "answers">
+							<h4 class = "text-center">Solution: </h4>
+							<table class = "table">
+								<thead>
+									<tr>
+									     
+									    <th scope="col">Input</th>
+									    <th scope="col">Output</th>
+								    </tr>
+							  	</thead>
+						  		<tbody id = 'tableBody'>
+								    
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		let addInputButton = document.getElementById('addInput'); 
+		let solveButton = document.getElementById('solve')
+		let resetButton = document.getElementById('reset'); 
+
+		// Disabling solve button in the beginning 
+		document.getElementById("solve").disabled = true;
+
+		var numbers = []; 
+		var inputs = 0; 
+		var solutions = 0; 
+
+
+		// Add Numbers Button Clicked
+		addInputButton.addEventListener('click', function(){
+
+			// Create Span Element when adding numbers 
+			if (document.getElementById('numberInput').value === ''){
+
+			} else {
+				numbers.push(document.getElementById('numberInput').value);
+				var numberText = document.createElement("span");
+				numberText.classList.add("addedNumbers");
+
+				 if(inputs > 0){
+				 	var text = document.createTextNode(', ' + document.getElementById('numberInput').value);
+
+				 } else {
+				 	var text = document.createTextNode(document.getElementById('numberInput').value);
+
+				 }
+	             numberText.appendChild(text);
+	             document.getElementById("numbers").appendChild(numberText);
+
+	             document.getElementById('numberInput').value = ''; 
+	             console.log(numbers.length);
+	             inputs++;
+			}
+			
+				  
+
+		});
+		// Disabling solve when empty 
+		document.getElementById('equationInput').addEventListener('input',function(e){
+			if(document.getElementById('equationInput').value === '') {
+				document.getElementById("solve").disabled = true;
+			} else {
+				document.getElementById("solve").disabled = false;
+			}
+		}); 
+
+		// Solve Button Clicked
+		solveButton.addEventListener('click', function(){
+			// console.log(eval(document.getElementById('equationInput').value)); 
+			var equation = document.getElementById('equationInput').value; 
+			var numOfPara = 0; 
+			// Checks the number of Paranetthis in the thing
+			for(var i = 0; i < equation.length; i++){
+				if (equation.charAt(i) == ')') {
+    				numOfPara++; 
+    			}	
+			}
+
+			var pointer = 0; 
+			while(numOfPara > 0){
+				if (equation.charAt(pointer) == '(') {
+    				numOfPara--; 
+    			}
+    			pointer++; 
+			}
+
+			for(var i = 0; i < numbers.length; i++){
+
+				let answer = numbers[i]*10; 
+				var newRow = document.createElement("tr");
+				newRow.classList.add("newRow");
+
+		        document.getElementById("tableBody").appendChild(newRow);
+		        var col1 = document.createElement("th");
+
+		        var col2 = document.createElement("th");
+		        var text = document.createTextNode(numbers[i]);
+		        col2.appendChild(text);
+		        newRow.appendChild(col2);
+
+		        var col3 = document.createElement("th");
+		        var text = document.createTextNode(answer);
+		        col3.appendChild(text);
+		        newRow.appendChild(col3);
+
+		        solutions++; 
+			}
+			 numbers.length = 0; 
+		}); 
+
+		// Reset Button Clicked
+		resetButton.addEventListener('click', function(){
+			
+			var element1 = document.getElementsByClassName('newRow');
+			for(var i = 0; i < element1.length; i++){
+				while (element1[i].hasChildNodes()) {
+	   				 element1[i].removeChild(element1[i].firstChild);
+				}
+			}
+
+			var element2 = document.getElementsByClassName('addedNumbers');
+			for(var i = 0; i < element2.length; i++){
+				while (element2[i].hasChildNodes()) {
+	   				 element2[i].removeChild(element2[i].firstChild);
+				}
+			}
+			
+			solutions = 0; 
+			inputs = 0; 
+			numbers.length = 0; 
+
+		}); 
+
+	</script>
+	
+</body>
+</html>
+
+	
