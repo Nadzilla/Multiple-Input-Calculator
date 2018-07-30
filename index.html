@@ -19,9 +19,16 @@
 		form {
 			margin-bottom: 10px; 
 		}
-		#inputStatus {
-			padding: 500px;
+
+		p {
+    		margin-right: 20px;
+    		margin-left: 20px; 
 		}
+
+		#cardInstructions {
+			margin-top: 12px; 
+		}
+		
 		
 	</style>
 	<title>Multiple Input Calculator</title>
@@ -33,11 +40,11 @@
 			<div class="col-md-6 mx-auto" >
 				<h1 class = "display-6 text-center mb-3 text-dark">Multiple Input Calculator</h1>
 
-						<input id ="equationInput" class="form-control form-control-lg mb-3" placeholder="Enter Equation... (beta testing)">
+						<input id ="equationInput"  class="form-control form-control-lg mb-3" placeholder="Enter Equation... (beta testing)">
 
 				<form class = "form">
 					<div class="form-group">
-						<input id ="numberInput" type="number" class="form-control form-control-lg" placeholder="Enter Inputs...">
+						<input id ="numberInput" onSubmit="return false;" type="number" class="form-control form-control-lg" placeholder="Enter Inputs..." onkeypress="return tableInputKeyPress(event)">
 						<div id="input-status" class = "font-weight-bold"></div>
 					</div>
 				</form>
@@ -66,6 +73,16 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="col-md-3 mx-auto" >
+				<div class="card bg-light mb-3 mt-3">
+					<h4 class = "text-center text-dark card-title" id = "cardInstructions">Instructions: </h4>
+					<p class = "text-dark">1. Input your equation</p>
+					<p class = "text-dark">2. In order to add a variable, add a variable, x. Other variables are not supported.</p>
+					<p class = "text-dark">3. Add inputs for x.</p>
+					<p class = "text-dark">4. Profit</p>
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -216,7 +233,15 @@
 					}
 					document.getElementById(i).textContent = answer; 
 				}
-		} 
+		}
+
+		function tableInputKeyPress(e){
+		  e=e||window.event;
+		  var key = e.keyCode;
+		  if(key==13) {
+		     return false; 
+			} 
+	}
 
 	</script>
 	
