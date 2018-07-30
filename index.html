@@ -19,6 +19,9 @@
 		form {
 			margin-bottom: 10px; 
 		}
+		#inputStatus {
+			padding: 500px;
+		}
 		
 	</style>
 	<title>Multiple Input Calculator</title>
@@ -35,23 +38,17 @@
 				<form class = "form">
 					<div class="form-group">
 						<input id ="numberInput" type="number" class="form-control form-control-lg" placeholder="Enter Inputs...">
-						
+						<div id="input-status" class = "font-weight-bold"></div>
 					</div>
 				</form>
 				<div class = "text-center">
 					<button class = "btn btn-primary mx-auto" id="addInput" type="button">Add Input</button>
-					<button class = "btn btn-success ml-3 mx-auto" id="solve" type="button">Solve</button>
 					<button class = "btn btn-danger ml-3 mx-auto" id="reset" type="button">Reset/Clear</button>
 				</div>
 
 					
 
 				<div id = "output">
-					<div class="card bg-primary mb-3 mt-3">
-						<div class="card-body" id = "numbers">
-							<h4 class = "text-center">Numbers: </h4>
-						</div>
-					</div>
 					<div class="card bg-success mb-3 mt-3">
 						<div class="card-body" id = "answers">
 							<h4 class = "text-center">Solution: </h4>
@@ -75,18 +72,16 @@
 
 
 	<script>
-		console.log(math.sqrt(-4));
+		document.getElementById("numberInput").maxLength = "1";
 		let addInputButton = document.getElementById('addInput'); 
 		let solveButton = document.getElementById('solve')
 		let resetButton = document.getElementById('reset'); 
 
-		// Disabling solve button in the beginning 
-		document.getElementById("solve").disabled = true;
-
+		
 		var numbers = []; 
 		var inputs = 0; 
 		var solutions = 0; 
-
+		var run = true; 
 
 		// Add Numbers Button Clicked
 		addInputButton.addEventListener('click', function(){
@@ -95,74 +90,83 @@
 			if (document.getElementById('numberInput').value === ''){
 
 			} else {
+				inputs++;
 				numbers.push(document.getElementById('numberInput').value);
-				var numberText = document.createElement("span");
-				numberText.classList.add("addedNumbers");
+				var newRow = document.createElement("tr");
+				newRow.classList.add("newRow");
 
-				 if(inputs > 0){
-				 	var text = document.createTextNode(', ' + document.getElementById('numberInput').value);
+			    document.getElementById("tableBody").appendChild(newRow);
+			    var col1 = document.createElement("th");
 
-				 } else {
-				 	var text = document.createTextNode(document.getElementById('numberInput').value);
+			    var col2 = document.createElement("th");
+			    var text1 = document.createTextNode(document.getElementById('numberInput').value);
+			    col2.appendChild(text1);
+			    newRow.appendChild(col2);
 
-				 }
-	             numberText.appendChild(text);
-	             document.getElementById("numbers").appendChild(numberText);
+			    var col3 = document.createElement("th");
+			    var text2 = document.createTextNode('0');
+			    col3.setAttribute("id",numbers.length); 
+			    col3.appendChild(text2);
+			    newRow.appendChild(col3);
 
-	             document.getElementById('numberInput').value = ''; 
-	             console.log(numbers.length);
-	             inputs++;
+	            document.getElementById('numberInput').value = '';
+	            if(document.getElementById('equationInput').value != ''){
+	            	updateText(); 
+	            }  
+	             
+	             
 			}
 			
 				  
 
 		});
-		// Disabling solve when empty 
+		// Answering inputs once equation input is changed
 		document.getElementById('equationInput').addEventListener('input',function(e){
+				equation = document.getElementById('equationInput').value; 	
+				var badInput = false; 
+					let scope = {
+  						x: 1
+					}
+					try {
+						math.eval(equation, scope);
+					}
+					catch(err) {
+						inputStatus = document.getElementById('input-status'); 
+						inputStatus.textContent = "Bad Input";
+						inputStatus.classList.remove("text-success");
+						inputStatus.classList.add("text-danger");
+						badInput = true; 
+					}
+					if(badInput === false){
+						inputStatus = document.getElementById('input-status'); 
+						inputStatus.textContent = "Good Input";
+						inputStatus.classList.remove("text-danger");
+						inputStatus.classList.add("text-success");
+					}
+									
 			if(document.getElementById('equationInput').value === '') {
-				document.getElementById("solve").disabled = true;
-			} else {
-				document.getElementById("solve").disabled = false;
-			}
-		}); 
-
-		// Solve Button Clicked
-		solveButton.addEventListener('click', function(){
-			// console.log(eval(document.getElementById('equationInput').value)); 
-			var equation = document.getElementById('equationInput').value; 
-			var numOfPara = 0; 
-			// Checks the number of Paranetthis in the thing
-			
-
-			for(var i = 0; i < numbers.length; i++){
-				let scope = {
-  					x: numbers[i]
+				inputStatus = document.getElementById('input-status'); 
+				inputStatus.textContent = "";
+				for(var i = 1; i <= numbers.length; i++){
+					document.getElementById(i).textContent = "0"; 
 				}
-				let answer = math.eval(equation, scope); 
-				var newRow = document.createElement("tr");
-				newRow.classList.add("newRow");
+			} else {
 
-		        document.getElementById("tableBody").appendChild(newRow);
-		        var col1 = document.createElement("th");
-
-		        var col2 = document.createElement("th");
-		        var text = document.createTextNode(numbers[i]);
-		        col2.appendChild(text);
-		        newRow.appendChild(col2);
-
-		        var col3 = document.createElement("th");
-		        var text = document.createTextNode(answer);
-		        col3.appendChild(text);
-		        newRow.appendChild(col3);
-
-		        solutions++; 
+				updateText(); 
 			}
-			 numbers.length = 0; 
+
+
 		}); 
+
+		
 
 		// Reset Button Clicked
 		resetButton.addEventListener('click', function(){
-			
+			document.getElementById('numberInput').value = '';
+			document.getElementById('equationInput').value = '';
+			inputStatus = document.getElementById('input-status'); 
+			inputStatus.textContent = "";
+
 			var element1 = document.getElementsByClassName('newRow');
 			for(var i = 0; i < element1.length; i++){
 				while (element1[i].hasChildNodes()) {
@@ -181,7 +185,38 @@
 			inputs = 0; 
 			numbers.length = 0; 
 
-		}); 
+		});
+
+
+
+		function updateText(){
+			var equation = document.getElementById('equationInput').value; 
+			for(var i = 1; i <= numbers.length; i++){
+					run = true; 
+					let scope = {
+  						x: numbers[i-1]
+					}
+					let answer = 0; 
+					try {
+						answer = math.eval(equation, scope);
+					}
+					catch(err) {
+						inputStatus = document.getElementById('input-status'); 
+						inputStatus.textContent = "Bad Input";
+						inputStatus.classList.remove("text-success");
+						inputStatus.classList.add("text-danger");
+						run = false; 
+					}
+					if(run === true){
+						inputStatus = document.getElementById('input-status'); 
+						inputStatus.textContent = "Good Input";
+						inputStatus.classList.remove("text-danger");
+						inputStatus.classList.add("text-success");
+
+					}
+					document.getElementById(i).textContent = answer; 
+				}
+		} 
 
 	</script>
 	
