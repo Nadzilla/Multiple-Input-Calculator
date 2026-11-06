@@ -1,23 +1,18 @@
 {
   "name": "multiple-input-calculator",
-  "version": "1.0.0",
-  "description": "A calculator that evaluates multple inputs at one time",
-  "main": "index.js",
-  "dependencies": {
-    "mathjs": "^5.0.4"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "2.0.0",
+  "description": "Evaluate one expression across many inputs at once — with a live plot, ranges, parameter knobs and CSV export.",
+  "keywords": ["calculator", "mathjs", "function", "table", "plot"],
+  "homepage": "https://nadzilla.github.io/Multiple-Input-Calculator/",
+  "license": "MIT",
+  "author": "Mohammed Alnadi",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nadzilla/Multiple-Input-Calculator.git"
   },
-  "author": "Mohammed Alnadi",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Nadzilla/Multiple-Input-Calculator/issues"
-  },
-  "homepage": "https://github.com/Nadzilla/Multiple-Input-Calculator#readme"
+  "bugs": { "url": "https://github.com/Nadzilla/Multiple-Input-Calculator/issues" },
+  "scripts": {
+    "start": "python3 -m http.server 4321",
+    "check": "node --check js/app.js"
+  }
 }
